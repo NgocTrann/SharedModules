@@ -1,57 +1,60 @@
---// Animation Module //--
+-- AnimationModule
 
-local AnimationModule = {
+local AnimationModule = {}
+AnimationModule.__index = AnimationModule
 
-
-}
-
-function AnimationModule:CreateAnimation(ID, humanoid)
+function AnimationModule.new(ID: String, humanoid)
+	local self = setmetatable({}, AnimationModule)
 	
-	local Animation = Instance.new("Animation")
-	Animation.AnimationId = ID
+	--//
 	
-	local animator = humanoid:WaitForChild("Animator")
+	self.ID = ID
+	self.humanoid = humanoid
+	
+	--//
+	
+	local animation = Instance.new("Animation")
+	animation.AnimationId = self.ID
 
-	local Track = animator:LoadAnimation(Animation)
+	local animator = self.humanoid:WaitForChild("Animator")
 
-	return Track
+	local track = animator:LoadAnimation(animation)
+	
+	--//
+	
+	self.animationTrack = track
+
+	
+	return self
 end
 
-function AnimationModule:PlayAnimation(Animation)
-	if Animation and not Animation.IsPlaying then
-		Animation:Play()
+function AnimationModule:PlayAnimation()
+	if self.animationTrack and not self.animationTrack.IsPlaying then
+		self.animationTrack:Play()
 	end
 end
 
-function AnimationModule:StopAnimation(Animation)
-	if Animation and Animation.IsPlaying then
-		Animation:Stop()
+function AnimationModule:StopAnimation()
+	if self.animationTrack and self.animationTrack.IsPlaying then
+		self.animationTrack:Stop()
 	end
 end
 
-function AnimationModule:GetAnimation(ID, humanoid)
-	for i, v in ipairs(humanoid:GetPlayingAnimationTracks()) do
-		if v.Animation.AnimationId == ID then
-			return v
+function AnimationModule:GetAnimation()
+	for _, track in ipairs(self.humanoid:GetPlayingAnimationTracks()) do
+		if track.Animation.AnimationId == self.ID then
+			return track
 		end
 	end
-	return nil  -- Moved this line outside the loop to return nil if no match is found.
+	return nil
 end
 
-function AnimationModule:GetLength(Animation)
-	if Animation then
-		return Animation.Length
-	else
-		return 0  -- Return 0 if the Animation is nil.
-	end
+function AnimationModule:GetLength()
+	return self.animationTrack.Length or 0
 end
 
-function AnimationModule:IsPlaying(Animation)
-	if Animation then
-		return Animation.IsPlaying
-	else
-		return false  -- Return false if the Animation is nil.
-	end
+function AnimationModule:IsPlaying()
+	return self.animationTrack.IsPlaying or false
 end
 
 return AnimationModule
