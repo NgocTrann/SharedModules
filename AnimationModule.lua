@@ -1,5 +1,15 @@
 -- AnimationModule
 
+--// ------------------------------- //--
+
+--// Code Example
+
+--// self.walkAnimation = GlobalAnimModule.new(ANIMATION ID, HUMANOID)  
+--// self.walkAnimation:PlayAnimation()
+
+--// ------------------------------- //--
+
+
 local AnimationModule = {}
 AnimationModule.__index = AnimationModule
 
@@ -58,3 +68,4 @@ function AnimationModule:IsPlaying()
 end
 
 return AnimationModule
+
